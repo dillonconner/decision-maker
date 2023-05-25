@@ -2,17 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -27,12 +16,255 @@
 .App-link {
   color: #61dafb;
 }
+/*       Home    */
+.home {
+  
+}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/*       Item Area    */
+.item-area {
+  background-color: rgba(40,44,52, 0.97);
+  color: azure;
+  border-radius: 10px 10px 0 0;
+  position: absolute;
+  width: 100vw;
+  height: 30vh;
+  bottom: 54px;
+  left: 0;
+  transition-duration: 0.5s;
+}
+.item-area.minimized {
+  height: 3vh;
+}
+.minimize-wrapper {
+  background-color: rgba(40,44,52, 1);
+  border-radius: inherit;
+}
+.minimize-icon {
+  height: 25px;
+}
+.items-container {
+  height: 90%;
+}
+.scrollable {
+  height: 100%;
+  overflow-y: scroll;
+}
+.item-section-header {
+  display: flex;
+  justify-content: space-between;
+  width: 86%;
+  margin: 2% 5%;
+  padding: 0 2%;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 2px solid azure;
+}
+.item-section-header p {
+  margin: 0;
+}
+
+/*       DRequest Item     */
+.decision-request-item {
+  position: relative;
+  margin: 5px 5%;
+  padding: 0 5%;
+  border: 1px solid azure;
+  border-radius: 10px;
+}
+.decision-request-item p, .decision-request-item h3 {
+  margin: 1% 0;
+}
+.item-header {
+  display: flex;
+  gap: 20px;
+  align-items: baseline;
+}
+.item-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5%;
+}
+.voted-check {
+  position: absolute;
+  top: 5%;
+  right: 1%;
+  width: 16px;
+  height: 16px;
+}
+
+/*       Util bar    */
+.util-bar {
+  background-color: rgba(40,44,52, 1);
+  color: azure;
+  position: absolute;
+  width: 100vw;
+  bottom: 0;
+  left: 0;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  gap: 50%;
+}
+.util-bar button {
+  background-color: transparent;
+  color: azure;
+  font-size: large;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+/*       Create Form    */
+.search-nearby {
+  background-color: rgba(40,44,52, 0.6);
+  color: azure;
+  position: absolute;
+  top:10vh;
+  left: 37vw;
+  padding: 10px 10px;
+  border-radius: 20px;
+  border: none;
+}
+.form-options {
+  width: 70%;
+  margin: 0 15%;
+}
+.option {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0 5%;
+}
+.option input {
+  margin: 5px 0;
+}
+.add-friends-btn {
+  width:90%;
+  font-size: large;
+  margin: 5px 5%;
+}
+.submit-btns {
+  gap: 10px;
+}
+.submit-btns button {
+  font-size: large;
+  width:45%;
+}
+
+/*       Add Friends Popup    */
+.popup {
+  background-color: rgba(40,44,52, 0.97);
+  color: azure;
+  width: 90%;
+  height: 50%;
+  position:fixed;
+  top: 10%;
+  left: 5%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0,0.7);
+}
+.friends-container {
+  height: 85%;
+}
+.friend-item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width:70%;
+  margin: 0px 10%;
+  padding: 0 5%;
+  font-size: 12px;
+}
+.friend-item button{
+  height: min-content;
+  font-size: 18px;
+}
+.friend-item .selected {
+  position: absolute;
+  left: -15px;
+}
+.friend-item h2 {
+  margin: 8px 0;
+}
+.popup-header {
+  background-color: rgba(40,44,52, 1);
+  margin: 0;
+  border-radius: inherit;
+}
+.friends .done-btn {
+  position: absolute;
+  bottom: 1%;
+  left:15%;
+  width: 70%;
+  font-size: 20px;
+}
+
+/*       login    */
+.login form {
+  font-size: 12px;
+  width:70%;
+  margin: 60px 15% 0;
+}
+.login input {
+  font-size: 25px;
+  width: 90%;
+  margin: 10px 0;
+}
+.login .remember-box {
+  width: min-content;
+  margin-left: 10px;
+  float: left;
+}
+.login .remember-label {
+  float: left;
+  margin: 7px 5px;
+}
+.login .forgot-password {
+  float: right;
+  border: none;
+  background-color: transparent;
+  margin-top: 7px;
+  margin-right: 10px;
+}
+.login-submit {
+  width:70%;
+  font-size: 20px;
+}
+
+/*       Friends     */
+.friends-search {
+  
+}
+.friends-area {
+  margin-top: 10px;
+}
+.friends-search.minimized, .friends-area.minimized   {
+  height: 25px;
+  overflow-y: hidden;
+}
+.folder-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 10%;
+  border-bottom: 1px solid azure;
+}
+.folder-header p {
+  margin: 0;
+}
+.icon {
+  height:16px;
+}
+.friends-area {
+  position: relative;
+}
+.searchbar {
+  font-size: 18px;
+  margin: 10px 0;
+}
+.loading-img {
+  position: absolute;
+  top:65px;
+  right: 40px;
+  height: 20px;
 }
