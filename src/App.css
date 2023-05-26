@@ -87,10 +87,9 @@
 }
 .voted-check {
   position: absolute;
-  top: 5%;
-  right: 1%;
+  top: 5px;
+  right: 5px;
   width: 16px;
-  height: 16px;
 }
 
 /*       Util bar    */
@@ -125,6 +124,9 @@
   border-radius: 20px;
   border: none;
 }
+.options-container {
+  height: 90%;
+}
 .form-options {
   width: 70%;
   margin: 0 15%;
@@ -149,6 +151,13 @@
 .submit-btns button {
   font-size: large;
   width:45%;
+}
+.places-preview {
+  margin: 10px 0;
+}
+
+.places-preview p {
+  margin:0;
 }
 
 /*       Add Friends Popup    */
@@ -268,3 +277,62 @@
   right: 40px;
   height: 20px;
 }
+
+/*       Vote     */
+.vote {
+  position: absolute;
+  width: 100vw;
+  height: min-content;
+  bottom: 50px;
+  left: 0;
+  overflow-x: scroll;
+}
+
+.vote .places-container {
+  position: relative;
+  display: flex;
+  width: max-content;
+  height: inherit;
+  padding: 0 15px;
+  align-items: end;
+}
+
+/*       Place Item     */
+.place-item {
+  background-color: rgba(40,44,52, 0.97);
+  color: azure;
+  position: relative;
+  width: 90vw;
+  height: 20vh;
+  margin: 0 5px;
+  overflow-y: hidden;
+  border-radius: 10px 10px 0 0;
+  transition-duration: 0.5s;
+}
+.place-item.full {
+  height: 50vh;
+}
+.place-num {
+  margin: 0;
+  position: absolute;
+  top: 0px;
+  left: 10px;
+}
+.place-container {
+  margin: 0 5%;
+  text-align: left;
+}
+.place-header h2 {
+  margin:0;
+  font-size: 25px;
+}
+.place-details {
+  margin: 5px 0 0;
+}
+.place-details p {
+  color: gray;
+  margin: 0 2px;
+}
+.row { display: flex; }
+p.green { color: green}
+p.red { color: red}
