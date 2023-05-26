@@ -58,39 +58,37 @@ const Friends = () => {
         <div className="friends popup">
             <h2 className="popup-header">Friends</h2>
             <div className="friends-container scrollable">
+                <div className={minimizeFSearch ? 'friends-search minimized' : "friends-search"}>
+                    <div className="folder-header" onClick={e=> setMinimizeFSearch(!minimizeFSearch)}>
+                        <p>Add Friends</p>
+                        <img className="icon" src={minimizeFSearch ? closedIcon : openIcon} />
+                    </div>
+                    <div className="folder-area">
+                        <input className="searchbar" 
+                            type="text" 
+                            value={searchTerm} 
+                            placeholder="Search by username" 
+                            onChange={handleSearchChange}
+                        />
+                        {searchLoading && <img className="loading-img" src={loadingIcon} alt={null} />}
+                        {testFriends.map((f, id) => <FriendItem key={id} friend={f} add={addFriend} added={false} />)}
+                    </div>
+                    
 
-            
-            <div className={minimizeFSearch ? 'friends-search minimized' : "friends-search"}>
-                <div className="folder-header" onClick={e=> setMinimizeFSearch(!minimizeFSearch)}>
-                    <p>Add Friends</p>
-                    <img className="icon" src={minimizeFSearch ? closedIcon : openIcon} />
                 </div>
-                <div className="folder-area">
-                    <input className="searchbar" 
-                        type="text" 
-                        value={searchTerm} 
-                        placeholder="Search by username" 
-                        onChange={handleSearchChange}
-                    />
-                    {searchLoading && <img className="loading-img" src={loadingIcon} alt={null} />}
-                    {testFriends.map((f, id) => <FriendItem key={id} friend={f} add={addFriend} added={false} />)}
+                <div className={minimizeFArea ? 'friends-area minimized' : "friends-area"}>
+                    <div className="folder-header" onClick={e=> setMinimizeFArea(!minimizeFArea)}>
+                        <p>Friends</p>
+                        <img className="icon" src={minimizeFArea ? closedIcon : openIcon} />
+                    </div>
+                    {testFriends.length > 0 ?  
+                        testFriends.map((f, id) => {
+                            return <FriendItem key={id} friend={f} remove={removeFriend} added={true} noIcon />
+                        })
+                        :
+                        <p>You have no friends</p>
+                    }
                 </div>
-                
-
-            </div>
-            <div className={minimizeFArea ? 'friends-area minimized' : "friends-area"}>
-                <div className="folder-header" onClick={e=> setMinimizeFArea(!minimizeFArea)}>
-                    <p>Friends</p>
-                    <img className="icon" src={minimizeFArea ? closedIcon : openIcon} />
-                </div>
-                {testFriends.length > 0 ?  
-                    testFriends.map((f, id) => {
-                        return <FriendItem key={id} friend={f} remove={removeFriend} added={true} noIcon />
-                    })
-                    :
-                    <p>You have no friends</p>
-                }
-            </div>
             </div>
         </div>
     )

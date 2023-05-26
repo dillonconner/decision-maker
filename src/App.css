@@ -96,14 +96,15 @@
 .util-bar {
   background-color: rgba(40,44,52, 1);
   color: azure;
-  position: absolute;
-  width: 100vw;
+  position: fixed;
   bottom: 0;
   left: 0;
+  width: 100vw;
   padding: 10px 0;
   display: flex;
   justify-content: center;
   gap: 50%;
+  z-index: 2;
 }
 .util-bar button {
   background-color: transparent;
@@ -296,6 +297,19 @@
   padding: 0 15px;
   align-items: end;
 }
+.rank-btn {
+  background-color: transparent;
+  color: azure;
+  font-size: large;
+  width: 125px;
+  margin: 0 33% 10px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+}
 
 /*       Place Item     */
 .place-item {
@@ -336,3 +350,39 @@
 .row { display: flex; }
 p.green { color: green}
 p.red { color: red}
+
+/*       Vote Ranking     */
+.ranking-container {
+  height: 83%;
+  position: relative;
+}
+.rank-item {
+  background-color: rgb(65, 65, 65);
+  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 86%;
+  margin: 10px 5%;
+  padding: 5px 2%;
+  border-radius: 10px;
+}
+.rank-item p {
+  margin: 0;
+}
+.drag-num.unranked {
+  font-size: 12px;
+  color: gray;
+}
+.drag-icon {
+  width:20px;
+}
+.submit-btn {
+  background-color: transparent;
+  color: azure;
+  font-size: 15px;
+  width: 125px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  z-index: 3;
+}

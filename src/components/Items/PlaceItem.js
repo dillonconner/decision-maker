@@ -4,7 +4,7 @@ import votedCheck from '../../icons/voted-check.png';
 
 const priceEnum = {'0': 'Free', '1': 'Cheap','2': 'Moderate','3': 'Expensive','4': 'Very Expensive',}
 
-const PlaceItem = ({place, num, addVote}) => {
+const PlaceItem = ({place, num, toggleVote, voted}) => {
 
     const [ showFull, setShowFull ] = useState(false);
     return (
@@ -12,9 +12,9 @@ const PlaceItem = ({place, num, addVote}) => {
             <div className="minimize-wrapper " onClick={e => setShowFull(!showFull)}>
                 <img className="minimize-icon" src={minimizeIcon} />
                 <p className="place-num">{num}</p>
-                <img className="voted-check" src={votedCheck}  alt="voted" />
+                {voted && <img className="voted-check" src={votedCheck}  alt="voted" />}
             </div>
-            <div className="place-container">
+            <div className="place-container" onClick={e => toggleVote(e, place.place_id, place.name)}>
                 <div className="place-header">
                     <h2>{place.name}</h2>
                     
@@ -22,7 +22,7 @@ const PlaceItem = ({place, num, addVote}) => {
                 <div className="place-details">
                     <div className="row">
                         {place.rating && <p className="rating">Rating: {place.rating}</p>}
-                        {place.user_ratings_total && <p className="total-ratings">{'\(' + place.user_ratings_total + '\)'}</p>}
+                        {place.user_ratings_total && <p className="total-ratings">{'(' + place.user_ratings_total + ')'}</p>}
                         {place.price_level && <p>${priceEnum[place.price_level.toString()]}</p>}
                     </div>
                     <div className="row">
