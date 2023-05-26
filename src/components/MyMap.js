@@ -1,39 +1,39 @@
-import React, { useCallback, useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { GoogleMap, Marker, Circle, useJsApiLoader } from "@react-google-maps/api";
-import { selectPlaces, searchNearby } from "../reducers/MapSlice";
+import { selectPlaces, selectBounds, updateCenter, updateRadius  } from "../reducers/MapSlice";
+import { findRadius } from "../util/distCalc";
 
 const containerStyle = {
     width: '100vw',
-    height: '100vh',
+    height: '93vh',
     position: 'absolute',
     zIndex: '-1'
 };
-const testPosition = {
-    lat: 37.090493,
-    lng: -76.437918
+const defaultCenter = {
+    lat: 36.156895,
+    lng: -95.991549
 };
-const libraries = ['places'];
+//const libraries = ['places'];
 
 const MyMap = () => {
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY,
-        libraries: libraries
+        //libraries: libraries
     })
     const dispatch = useDispatch();
     
-
     const [ map, setMap ] = useState(null);
-    const [ myPosition, setMyPosition ] = useState();
+    const [ myPosition, setMyPosition ] = useState(null);
     const places = useSelector(selectPlaces);
-    console.log('places in mymap');
-    console.log(places);
-
+    const bounds = useSelector(selectBounds);
+    //development testing stuff
+    const [ circleRadius, setCircleRadius ] = useState(null);
+    const [ circleCenter, setCircleCenter ] = useState(null);
     
-    const onLoad = (map) => {
-        console.log('map has loaded');
-        setMap(map);
+
+    useEffect(() => {
         if(navigator.geolocation){
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -41,8 +41,7 @@ const MyMap = () => {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
                     };
-                    setMyPosition(testPosition); //change this
-                    map.setCenter(testPosition);
+                    setMyPosition(pos); //change this
                 
                 }, () => {
                 //handle error
@@ -51,17 +50,56 @@ const MyMap = () => {
         } else {
             //handle location not allowed
         }
+    }, []);
+    
+    useEffect(() => {
+        if(bounds){
+            map.fitBounds(bounds);
+        }
+    }, [bounds])
+
+    
+    const onLoad = (map) => {
+        setMap(map);
+        new window.google.maps.Marker({
+            position: myPosition,
+            map: map,
+            icon: {
+              path: window.google.maps.SymbolPath.CIRCLE,
+              scale: 6,
+              fillOpacity: 1,
+              strokeWeight: 2,
+              fillColor: '#5384ED',
+              strokeColor: '#ffffff',
+            },
+        });
+    }
+    const onIdle = () => {
+        if(!map) return
+
+        const newCenter = map.getCenter().toJSON();
+        const newNE = map.getBounds().getNorthEast().toJSON()
+        //console.log(newCenter);
+        //console.log(newNE);
+        //console.log(findRadius(newCenter, newNE) * 1000 / 2);
+        dispatch(updateCenter(newCenter));
+        dispatch(updateRadius(findRadius(newCenter, newNE) * 1000 / 2)); 
+        // Dev help Stuff
+        //setBounds(newBounds);
+        //setCircleRadius((findRadius(newCenter, newBounds.ne) /2) *1000);
+        //setCircleCenter(newCenter);
     }
     
     return isLoaded ? (
         <div className="map">
             <GoogleMap 
-                zoom={10}
+                center={myPosition ? myPosition : defaultCenter}
+                zoom={14}
                 onLoad={onLoad}
+                onIdle={onIdle}
                 mapContainerStyle={containerStyle}
             >
-                <Circle center={myPosition} radius={2500} />
-                <Marker position={myPosition} />
+                {circleCenter && circleRadius && <Circle center={circleCenter} radius={circleRadius} />}
                 { places.length > 0 && 
                     places.map((p, id) => <Marker key={id} position={p.geometry.location} />)
                 }
