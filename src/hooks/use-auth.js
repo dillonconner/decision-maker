@@ -55,7 +55,6 @@ function useProvideAuth() {
     const signup = ({username, displayname, email, password}) => {
         setIsLoading(true);
         setError([]);
-        console.log('signup');
         fetch(`${baseUrl}/user/signup`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
