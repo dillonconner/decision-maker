@@ -29,7 +29,6 @@ const testFriends = [
 const Friends = () => {
 
     const auth = useAuth();
-    //console.log(auth.user);
 
     const [ searchTerm, setSearchTerm ] = useState('');
     const debouncedSearch = useDebounce(searchTerm, 1000);
@@ -81,8 +80,8 @@ const Friends = () => {
                         <p>Friends</p>
                         <img className="icon" src={minimizeFArea ? closedIcon : openIcon} />
                     </div>
-                    {testFriends.length > 0 ?  
-                        testFriends.map((f, id) => {
+                    {auth.user.friends.length > 0 ?  
+                        auth.user.friends.map((f, id) => {
                             return <FriendItem key={id} friend={f} remove={removeFriend} added={true} noIcon />
                         })
                         :

@@ -11,7 +11,7 @@ const Profile = () => {
             <p>Display name: {auth.user.displayname}</p>
             <p>Username: {auth.user.username}</p>
             <p>Friends: {auth.user.friends.length}</p>
-            <button onClick={e => auth.logout() }>Log Out</button>
+            <button className="submit-btn" onClick={e => auth.logout() }>Log Out</button>
         </div>
     )
 }
