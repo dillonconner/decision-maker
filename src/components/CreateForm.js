@@ -59,10 +59,10 @@ const CreateForm = () => {
     const radius = useSelector(selectRadius);
     const places = useSelector(selectPlaces);
     const [ currRequest, setCurrRequest ] = useState({
-        initiator: auth.user.user_id,
+        initiator: {user_id: auth.user.user_id, display_name: auth.user.displayname},
         subject: '', 
         time: '',
-        recipients: [auth.user.user_id]
+        recipients: [{user_id: auth.user.user_id, display_name: auth.user.displayname}]
     })
     const [added, setAdded] = useState ([]);
 
@@ -101,23 +101,19 @@ const CreateForm = () => {
         navigate('/');
     }
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        //build request
         const request = {
             ...currRequest,
-            recipients: currRequest.recipients.map(r => {return {user_id:r, voted:false}}),
+            recipients: currRequest.recipients.map(r => {return {...r, voted:false}}),
             placeVotes: places.map(p => {return {place: p, votes: 0}}),
             center: center,
             round: 1,
         }
-        console.log(request);
-        //send request to backend
         await fetch(`${baseUrl}/decisions`,{
             method: 'POST',
             headers: {'Content-Type': 'application/json', 'authorization' : `Bearer ${localStorage.getItem('token')}`},
             body: JSON.stringify(request)
-            }).then(async (response) => {
-                //go to vote
+            }).then(async (response) => { //go to vote
+                
                 const resp = await response.json();
                 console.log(resp);
                 dispatch(setFull(resp.data));
