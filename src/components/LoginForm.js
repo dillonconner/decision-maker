@@ -17,7 +17,6 @@ const LoginForm = () => {
         }
     }, [])
     useEffect(() => {
-        console.log('auth updates');
         if(auth.user && !auth.error){
             navigate('/', {replace:true});
         }
@@ -34,7 +33,6 @@ const LoginForm = () => {
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('sumbits');
         if(document.getElementsByClassName('remember-box')[0].checked){
             localStorage.setItem('username', form.username);
         }else {
