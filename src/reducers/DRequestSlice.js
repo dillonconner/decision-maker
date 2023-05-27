@@ -4,7 +4,6 @@ import { baseUrl } from '../util/apiConfig';
 export const loadPreviews = createAsyncThunk(
     'dRequest/loadPreviews',
     async () => {
-        console.log('load Previews');
         const resp = await fetch(`${baseUrl}/decisions`, {
             method: 'GET',
             headers: {'authorization' : `Bearer ${localStorage.getItem('token')}` },
@@ -16,7 +15,6 @@ export const loadPreviews = createAsyncThunk(
 export const loadFull = createAsyncThunk(
     'dRequest/loadFull',
     async ({decisionId}) => {
-        console.log('loadFull');
         const resp = await fetch(`${baseUrl}/decisions/${decisionId}`, {
             method: 'GET',
             headers: {'authorization' : `Bearer ${localStorage.getItem('token')}` }
@@ -40,6 +38,9 @@ const dRequestSlice = createSlice({
     reducers: { 
         setFull(state, action) {
             state.full = action.payload;
+        },
+        clearFull(state) {
+            state.full = null;
         }
     },
     extraReducers: {
@@ -75,6 +76,6 @@ const dRequestSlice = createSlice({
 export const selectFull = state => state.dRequest.full;
 export const selectPreviews = state => state.dRequest.previews;
 export const selectIsLoading = state => state.dRequest.isLoading;
-export const { setFull } = dRequestSlice.actions;
+export const { setFull, clearFull } = dRequestSlice.actions;
 
 export default dRequestSlice.reducer;

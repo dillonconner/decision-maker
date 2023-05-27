@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import PlaceItem from "./Items/PlaceItem";
 import { useDispatch, useSelector } from "react-redux";
-import { loadFull, selectFull } from "../reducers/DRequestSlice";
-import { useParams } from "react-router-dom";
+import { clearFull, loadFull, selectFull } from "../reducers/DRequestSlice";
+import { useNavigate, useParams } from "react-router-dom";
 import { updatePlaces } from "../reducers/MapSlice";
 import minimizeIcon from '../icons/minimize.svg';
+import { baseUrl } from "../util/apiConfig";
 
 const Vote = () => {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { decisionId } = useParams();
     const full = useSelector(selectFull);
@@ -16,25 +18,20 @@ const Vote = () => {
     
 
     useEffect(() => {
-        console.log('vote load');
-        console.log(full);
-        if(!full){
-            console.log('load full');
-            dispatch(loadFull({decisionId}));
-        }
+        if(!full) dispatch(loadFull({decisionId})); 
     }, [])
 
     const toggleVote = (e, placeId, placeName) => {
         if(votes.find(v => v.placeId === placeId)){
             setVotes(votes.filter(v => v.placeId !== placeId));
         } else {
-            setVotes([...votes, {placeId, placeName, rank: 420}]);
+            setVotes([...votes, {placeId, placeName, rank: -Infinity}]);
         }
     }
     const toggleRank = (e, placeId) => {
         const vote = votes.find(v => v.placeId === placeId);
-        if(vote.rank < 420){  //remove rank
-            const newVote = {...vote, rank: 420};
+        if(vote.rank >= 0){  //remove rank
+            const newVote = {...vote, rank: -Infinity};
             setVotes([...votes.filter(v => v.placeId !== placeId), newVote]);
             setNextRank(nextRank-1);
         }else { //add rank
@@ -44,8 +41,19 @@ const Vote = () => {
         }
         
     }
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+        //send votes
         setShowRanking(false); //change
+        await fetch(`${baseUrl}/decisions/vote/${decisionId}`,{
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json', 'authorization' : `Bearer ${localStorage.getItem('token')}`},
+            body: JSON.stringify(votes)
+            }).then(async (response) => { //go to vote
+                
+                const resp = await response.json();
+                dispatch(clearFull());
+                navigate(`/`);
+        });
     }
 
     const [ showRanking, setShowRanking ] = useState(false);
@@ -54,7 +62,7 @@ const Vote = () => {
         <div className="vote">
             <button className="rank-btn" onClick={e => setShowRanking(true)}>Rank Picks</button>
             <div className="places-container">
-                {full.placeVotes.length > 0 &&
+                {full && full.placeVotes.length > 0 &&
                     full.placeVotes.map((pv, id) => {
                         return <PlaceItem key={id} 
                                 num={`${id+1}/${full.placeVotes.length}`}  
@@ -75,7 +83,7 @@ const Vote = () => {
                     votes.sort((a,b) => a.rank-b.rank).map((v, id) => {
                         return <div className={"rank-item"} key={id} onClick={e => toggleRank(e, v.placeId)}>
                                     {v.rank > 0 && v.rank < 419 ? 
-                                        <p className="drag-num">{v.rank}st</p>
+                                        <p className="drag-num">{v.rank}{v.rank>3 ? 'th' : v.rank>2 ? 'rd' : v.rank>1 ? 'nd' : 'st'}</p>
                                         :
                                         <p className="drag-num unranked">unranked</p>
                                     }

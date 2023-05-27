@@ -18,7 +18,7 @@ const Home = () => {
     //<button onClick={handleSearchNearby}>Search Nearby</button>
     return (
         <div className="home">
-            <button className="search-nearby" onClick={handleNavigate} >Search Nearby</button>
+            <button className="search-nearby" onClick={handleNavigate} >New Decision</button>
             <ItemArea />
         </div>
         
