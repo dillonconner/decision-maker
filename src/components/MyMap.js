@@ -5,8 +5,8 @@ import { selectPlaces, selectBounds, updateCenter, updateRadius  } from "../redu
 import { findRadius } from "../util/distCalc";
 
 const containerStyle = {
-    width: '100vw',
-    height: '93vh',
+    width: 'var(--width)',
+    height: '94vh',
     position: 'absolute',
     zIndex: '-1'
 };
@@ -79,15 +79,9 @@ const MyMap = () => {
 
         const newCenter = map.getCenter().toJSON();
         const newNE = map.getBounds().getNorthEast().toJSON()
-        //console.log(newCenter);
-        //console.log(newNE);
-        //console.log(findRadius(newCenter, newNE) * 1000 / 2);
+        
         dispatch(updateCenter(newCenter));
-        dispatch(updateRadius(findRadius(newCenter, newNE) * 1000 / 2)); 
-        // Dev help Stuff
-        //setBounds(newBounds);
-        //setCircleRadius((findRadius(newCenter, newBounds.ne) /2) *1000);
-        //setCircleCenter(newCenter);
+        dispatch(updateRadius(findRadius(newCenter, newNE) * 1000 / 2));
     }
     
     return isLoaded ? (
@@ -100,11 +94,10 @@ const MyMap = () => {
                 mapContainerStyle={containerStyle}
             >
                 {circleCenter && circleRadius && <Circle center={circleCenter} radius={circleRadius} />}
-                { places.length > 0 && 
+                {places.length > 0 && 
                     places.map((p, id) => <Marker key={id} position={p.geometry.location} />)
                 }
             </GoogleMap>
-            
         </div>
     ) : <></>
 }
