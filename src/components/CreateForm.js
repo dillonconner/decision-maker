@@ -15,40 +15,6 @@ import FriendItem from "./Items/FriendItem";
 import { findNewBounds } from "../util/distCalc";
 import { baseUrl } from "../util/apiConfig";
 
-/*
-const testPosition = {
-    lat: 37.090493,
-    lng: -76.437918
-};
-const testFriends = [
-    {user_id: 'testuser', displayname: 'Dillon Conner'},
-    {user_id: 'testuser1', displayname: 'dillon1'},
-    {user_id: 'testuser2', displayname: 'dillon2'},
-    {user_id: 'testuser3', displayname: 'dillon3'},
-    {user_id: 'testuser4', displayname: 'dillon4'},
-    {user_id: 'testuser5', displayname: 'dillon5'},
-    {user_id: 'testuser5', displayname: 'dillon5'},
-    {user_id: 'testuser5', displayname: 'dillon5'},
-    {user_id: 'testuser5', displayname: 'dillon5'},
-    {user_id: 'testuser5', displayname: 'dillon5'},
-    {user_id: 'testuser5', displayname: 'dillon5'},
-    {user_id: 'testuser5', displayname: 'dillon5'},
-    {user_id: 'testuser5', displayname: 'dillon5'},
-    {user_id: 'testuser5', displayname: 'dillon5'},
-    {user_id: 'testuser5', displayname: 'dillon5'},
-    {user_id: 'testuser5', displayname: 'dillon5'},
-    {user_id: 'testuser5', displayname: 'dillon5'}
-]
-/*  sample request
-initiator: 'Test1',
-recipients: [{user: 'test1', voted: true}, {user: 'test2', voted: false}, {user: 'test3', voted: true}],
-subject: 'Lunch',
-time: 'Noon',
-center: { lat: 37.090493, lng: -76.437918 },
-placeVotes: [],
-round: 1,
-winner: "Pending.."
-*/
 const CreateForm = () => {
 
     const auth = useAuth();
@@ -59,12 +25,11 @@ const CreateForm = () => {
     const radius = useSelector(selectRadius);
     const places = useSelector(selectPlaces);
     const [ currRequest, setCurrRequest ] = useState({
-        initiator: {user_id: auth.user.user_id, display_name: auth.user.displayname},
+        initiator: {user_id: auth.user.user_id, displayname: auth.user.displayname},
         subject: '', 
         time: '',
-        recipients: [{user_id: auth.user.user_id, display_name: auth.user.displayname}]
+        recipients: [{user_id: auth.user.user_id, displayname: auth.user.displayname}]
     })
-    const [added, setAdded] = useState ([]);
 
     useEffect(() => {
         if(places.length > 0){
@@ -80,27 +45,39 @@ const CreateForm = () => {
             type: "restaurant",
             keyword: "food"
         }
-        if(window.confirm('You\'re about to do a nearby search, which costs money')){
+        //if(window.confirm('You\'re about to do a nearby search, which costs money')){
             dispatch(searchNearby(request));
-        }
+        //}
     };
+    const handleShowFriends = (e) => {
+        e.preventDefault();
+        setShowFriends(true);
+    }
     const addFriend = (e) => {
-        const newRecipients = [...currRequest.recipients, e.target.value];
+        const targetUser = auth.user.friends.find(elem => elem.user_id === e.target.value);
+        const newRecipients = [...currRequest.recipients, targetUser];
         setCurrRequest({...currRequest, recipients: newRecipients});
-        setAdded([...added, ])
     }
     const removeFriend = (e) => {
-        const newRecipients = currRequest.recipients.filter((r) => r !== e.target.value);
+        const newRecipients = currRequest.recipients.filter((r) => r.user_id !== e.target.value);
         setCurrRequest({...currRequest, recipients: newRecipients});
     }
-    const handleSubjectChange = (e) => {setCurrRequest({...currRequest, subject: e.target.value})}
-    const handleTimeChange = (e) => {setCurrRequest({...currRequest, time: e.target.value})}
+    const handleSubjectChange = (e) => {
+        const newSubject = e.target.value.length > e.target.maxLength ? e.target.value.slice(0, e.target.maxLength) : e.target.value; 
+        setCurrRequest({...currRequest, subject: newSubject});
+    }
+    const handleTimeChange = (e) => {
+        //const newTime = e.target.value < Date.now() ? Date.now() : e.target.value;
+        const newTime = e.target.value;
+        setCurrRequest({...currRequest, time: newTime});
+    }
     const handleCancel = (e) => {
         e.preventDefault();
         dispatch(resetMap());
         navigate('/');
     }
     const handleSubmit = async (e) => {
+        e.preventDefault();
         const request = {
             ...currRequest,
             recipients: currRequest.recipients.map(r => {return {...r, voted:false}}),
@@ -112,10 +89,9 @@ const CreateForm = () => {
             method: 'POST',
             headers: {'Content-Type': 'application/json', 'authorization' : `Bearer ${localStorage.getItem('token')}`},
             body: JSON.stringify(request)
-            }).then(async (response) => { //go to vote
+            }).then(async(response) => { //go to vote
                 
                 const resp = await response.json();
-                console.log(resp);
                 dispatch(setFull(resp.data));
                 navigate(`/vote/${resp.data._id}`);
         });
@@ -137,20 +113,31 @@ const CreateForm = () => {
                         <p>Options</p>
                         <p>People: {currRequest.recipients.length}</p>
                     </div>
+                    <form onSubmit={handleSubmit}>
                     <div className="form-options">
                         <div className="option">
                             <label htmlFor="subject">Subject:</label>
-                            <input name="subject" placeholder="Subject" value={currRequest.subject} onChange={handleSubjectChange} />
+                            <input name="subject" 
+                            placeholder="Subject" 
+                            value={currRequest.subject} 
+                            onChange={handleSubjectChange} 
+                            required
+                            maxLength={20}/>
                         </div>
                         <div className="option">
                             <label htmlFor="time">Time:</label>
-                            <input name="time" type="time" placeholder="Time" value={currRequest.time} onChange={handleTimeChange}/>
+                            <input name="time" 
+                            type="datetime-local" 
+                            placeholder="Time" 
+                            value={currRequest.time} 
+                            onChange={handleTimeChange} 
+                            required />
                         </div>
                         
-                        <button className="add-friends-btn" onClick={e=> setShowFriends(true)}>Add Friends</button>
+                        <button className="add-friends-btn" onClick={handleShowFriends}>Add Friends</button>
                         <div className="submit-btns">
                             <button onClick={handleCancel}>Cancel</button>
-                            <button onClick={handleSubmit}>Submit</button>
+                            <button type='submit'>Submit</button>
                         </div>
                         <div className="places-preview">
                             <div className="folder-header">
@@ -160,6 +147,7 @@ const CreateForm = () => {
                             {places.map((p, id) => <p key={id}>{p.name}</p>)}
                         </div>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -172,14 +160,16 @@ const CreateForm = () => {
                         {auth?.user.friends.map((f, id) => {
                             return <FriendItem key={id} 
                                     friend={f} 
+                                    edit
                                     add={addFriend} 
                                     remove={removeFriend} 
-                                    added={currRequest.recipients.includes(f.user_id)} 
-                                    />
+                                    added={currRequest.recipients.find(r => r.user_id === f.user_id)} />
                         })}
                     </div>
                 </div>
-                <button className="done-btn" onClick={e=> setShowFriends(false)}>Done</button>
+                <div className="popup-btns">
+                    <button onClick={e=> setShowFriends(false)}>Done</button>
+                </div>
             </div>
         }
     </div>
