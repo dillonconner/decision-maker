@@ -23,6 +23,28 @@ export const loadFull = createAsyncThunk(
         return json.data;
     }
 )
+export const denyRequest = createAsyncThunk(
+    'dRequest/denyRequest',
+    async ({decisionId}) => {
+        const resp = await fetch(`${baseUrl}/decisions/decline/${decisionId}`, {
+            method: 'PUT',
+            headers: {'authorization' : `Bearer ${localStorage.getItem('token')}` }
+        });
+        const json = await resp.json();
+        return json.data;
+    }
+)
+export const deleteRequest = createAsyncThunk(
+    'dRequest/deleteRequest',
+    async ({decisionId}) => {
+        const resp = await fetch(`${baseUrl}/decisions/${decisionId}`, {
+            method: 'DELETE',
+            headers: {'authorization' : `Bearer ${localStorage.getItem('token')}` }
+        });
+        const json = await resp.json();
+        return json.data;
+    }
+)
 
 
 const initialState = {
@@ -30,7 +52,7 @@ const initialState = {
     full: null,
     isLoading: false,
     hasError: false,
-}
+};
 
 const dRequestSlice = createSlice({
     name: 'dRequest',
@@ -69,7 +91,31 @@ const dRequestSlice = createSlice({
         [loadFull.rejected]: (state, action) => {
             state.isLoading = false;
             state.requestFailed = true;
-        }
+        },
+        [denyRequest.pending]: (state, action) => {
+            state.isLoading = true;
+            state.requestFailed = false;
+        },
+        [denyRequest.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.requestFailed = false;
+        },
+        [denyRequest.rejected]: (state, action) => {
+            state.isLoading = false;
+            state.requestFailed = true;
+        },
+        [deleteRequest.pending]: (state, action) => {
+            state.isLoading = true;
+            state.requestFailed = false;
+        },
+        [deleteRequest.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.requestFailed = false;
+        },
+        [deleteRequest.rejected]: (state, action) => {
+            state.isLoading = false;
+            state.requestFailed = true;
+        },
     }
 });
 
