@@ -28,5 +28,7 @@ export const findNewBounds= (places) => {
     const maxLng = Math.max(...places.map(p => p.geometry.location.lng));
     const minLng = Math.min(...places.map(p => p.geometry.location.lng));
 
-    return {north: maxLat, east: maxLng, south:minLat, west:minLng}
+    const adjustment = (maxLat - minLat) *0.70; //ajust bounds so no markers are behind menus
+
+    return {north: maxLat, east: maxLng, south:minLat-adjustment, west:minLng}
 }
