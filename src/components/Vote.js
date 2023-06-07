@@ -3,23 +3,44 @@ import PlaceItem from "./Items/PlaceItem";
 import { useDispatch, useSelector } from "react-redux";
 import { clearFull, loadFull, selectFull } from "../reducers/DRequestSlice";
 import { useNavigate, useParams } from "react-router-dom";
-import { updatePlaces } from "../reducers/MapSlice";
+import { loadPlaceDetails, selectIsLoading, selectPlaceDetails, selectPlaces, updateBounds, updatePlaces } from "../reducers/MapSlice";
 import minimizeIcon from '../icons/minimize.svg';
 import { baseUrl } from "../util/apiConfig";
+import { findNewBounds } from "../util/distCalc";
+import loadingIcon from '../icons/Loading-icon.gif';
 
 const Vote = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { decisionId } = useParams();
+
+    const places = useSelector(selectPlaces);
     const full = useSelector(selectFull);
+    const placeDetails = useSelector(selectPlaceDetails);
     const [ votes, setVotes ] = useState([]);
     const [ nextRank, setNextRank ] = useState(1);
     
 
     useEffect(() => {
         if(!full) dispatch(loadFull({decisionId})); 
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if(full && full.placeVotes.length > 0){
+            const places = full.placeVotes.map(pv => pv.place);
+            dispatch(updatePlaces(places));
+            dispatch(loadPlaceDetails(places));
+            console.log(full);
+        }
+    }, [full]);
+
+    useEffect(() => {
+        if(places.length > 0){
+            const newBounds = findNewBounds(places);
+            dispatch(updateBounds(newBounds));
+        }
+    }, [places]);
 
     const toggleVote = (e, placeId, placeName) => {
         if(votes.find(v => v.placeId === placeId)){
@@ -48,27 +69,35 @@ const Vote = () => {
             method: 'PUT',
             headers: {'Content-Type': 'application/json', 'authorization' : `Bearer ${localStorage.getItem('token')}`},
             body: JSON.stringify(votes)
-            }).then(async (response) => { //go to vote
-                
-                const resp = await response.json();
+            }).then(() => { //go to vote
                 dispatch(clearFull());
                 navigate(`/`);
         });
     }
 
     const [ showRanking, setShowRanking ] = useState(false);
-
+    const isLoading = useSelector(selectIsLoading);
+    
+    if(isLoading) return (
+        <div className="vote">
+            <div className="places-container">
+                <div className="place-item">
+                    <img className="vote-loading" src={loadingIcon} alt="Loading"/>
+                </div>
+            </div>
+        </div>
+    )
     return !showRanking ? (
         <div className="vote">
             <button className="rank-btn" onClick={e => setShowRanking(true)}>Rank Picks</button>
             <div className="places-container">
-                {full && full.placeVotes.length > 0 &&
-                    full.placeVotes.map((pv, id) => {
+                {placeDetails && placeDetails.length > 0 &&
+                    placeDetails.map((p, id) => {
                         return <PlaceItem key={id} 
-                                num={`${id+1}/${full.placeVotes.length}`}  
-                                place={pv.place} 
+                                num={`${id+1}/${placeDetails.length}`}  
+                                place={p} 
                                 toggleVote={toggleVote}
-                                voted={votes.find(v => v.placeId === pv.place.place_id)} />
+                                voted={votes.find(v => v.placeId === p.place_id)} />
                     })
                 }
             </div>
