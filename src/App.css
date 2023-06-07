@@ -1,24 +1,28 @@
+:root {
+  --width: min(600px, 100vw);
+}
 .App {
   text-align: center;
 }
+::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
-
-.App-link {
-  color: #61dafb;
+::-webkit-scrollbar-track {
+  background-color: rgb(40,44,52);
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(189, 189, 189, 0.5); 
 }
 /*       Home    */
 .home {
-  
+  width: var(--width);
+}
+.create-form {
+  width: var(--width);
 }
 
 /*       Item Area    */
@@ -27,11 +31,11 @@
   color: azure;
   border-radius: 10px 10px 0 0;
   position: absolute;
-  width: 100vw;
+  width: var(--width);
   height: 30vh;
   bottom: 54px;
   left: 0;
-  transition-duration: 0.5s;
+  transition: height 0.5s;
 }
 .item-area.minimized {
   height: 3vh;
@@ -45,6 +49,7 @@
 }
 .items-container {
   height: 90%;
+  width: 99%;
 }
 .scrollable {
   height: 100%;
@@ -60,7 +65,7 @@
   font-weight: bold;
   border-bottom: 2px solid azure;
 }
-.item-section-header p {
+.item-section-header p, .item-section-header h3 {
   margin: 0;
 }
 
@@ -72,7 +77,7 @@
   border: 1px solid azure;
   border-radius: 10px;
 }
-.decision-request-item p, .decision-request-item h3 {
+.decision-request-item p, .decision-request-item h3, .decision-request-item h6 {
   margin: 1% 0;
 }
 .item-header {
@@ -89,14 +94,16 @@
 }
 .voted-check {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  padding: 5px;
+  top: 0;
+  right: 0;
   width: 20px;
 }
 .delete-icon {
   position: absolute;
-  top: 5px;
-  left: 5px;
+  padding: 5px;
+  top: 0;
+  left: 0;
   width: 20px;
 }
 
@@ -107,7 +114,7 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100vw;
+  width: var(--width);
   padding: 10px 0;
   display: flex;
   justify-content: center;
@@ -126,9 +133,9 @@
 .search-nearby {
   background-color: rgba(40,44,52, 0.6);
   color: azure;
-  position: absolute;
+  position: relative;
   top:10vh;
-  left: 37vw;
+  left: 0;
   padding: 10px 10px;
   border-radius: 20px;
   border: none;
@@ -147,7 +154,9 @@
   margin: 0 5%;
 }
 .option input {
+  width: 70%;
   margin: 5px 0;
+  padding: 5px 0;
 }
 .add-friends-btn {
   width:90%;
@@ -173,25 +182,55 @@
 .popup {
   background-color: rgba(40,44,52, 0.97);
   color: azure;
-  width: 90%;
+  width: calc(var(--width) - var(--width)/10);
   height: 50%;
   position:fixed;
   top: 10%;
-  left: 5%;
+  left: calc(var(--width)/20);
   border-radius: 10px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0,0.7);
 }
+.popup-header {
+  background-color: rgba(40,44,52, 1);
+  width: 99%;
+  margin: 0;
+  border-radius: 10px 10px 0 0;
+}
+.popup-btns {
+  background-color: rgba(40,44,52, 1);
+  display: flex;
+  width: 90%;
+  gap: 10px;
+  position: absolute;
+  bottom: 1%;
+  left: 5%;
+}
+.popup-btns button, .popup-btns a{
+  background-color: transparent;
+  color: azure;
+  width: 100%;
+  padding: 5px 0px; 
+  border-top: 2px solid rgba(189, 189, 189, 0.788);
+  border-left: 2px solid rgba(189, 189, 189, 0.788);
+  border-right: 2px solid rgb(19, 19, 19);
+  border-bottom: 2px solid rgb(19, 19, 19);
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+
 .friends-container {
   height: 85%;
+  width: 99%;
 }
 .friend-item {
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width:70%;
+  width:80%;
   margin: 0px 10%;
-  padding: 0 5%;
+  padding: 0;
   font-size: 12px;
 }
 .friend-item button{
@@ -200,23 +239,13 @@
 }
 .friend-item .selected {
   position: absolute;
-  left: -15px;
+  right: 0px;
 }
 .friend-item h2 {
   margin: 8px 0;
 }
-.popup-header {
-  background-color: rgba(40,44,52, 1);
-  margin: 0;
-  border-radius: inherit;
-}
-.friends .done-btn {
-  position: absolute;
-  bottom: 1%;
-  left:15%;
-  width: 70%;
-  font-size: 20px;
-}
+
+
 
 /*       login    */
 .login form {
@@ -254,10 +283,10 @@
 .friends-search {
   
 }
-.friends-area {
+.friends-search, .friends-area, .friends-pending {
   margin-top: 10px;
 }
-.friends-search.minimized, .friends-area.minimized   {
+.friends-search.minimized, .friends-area.minimized, .friends-pending.minimized   {
   height: 25px;
   overflow-y: hidden;
 }
@@ -273,6 +302,10 @@
 .icon {
   height:16px;
 }
+.icon.large{
+  height: 30px;
+  margin-right: 5px;
+}
 .friends-area {
   position: relative;
 }
@@ -282,28 +315,49 @@
 }
 .loading-img {
   position: absolute;
-  top:65px;
+  top: 75px;
   right: 40px;
   height: 20px;
 }
+.user-info {
+  text-align: left;
+  margin: 5px 0;
+}
+.user-info p, .user-info h2 {
+  margin: 0;
+}
+.friend-request-buttons button {
+  font-size: 12px;
+}
+button.green { background-color: green; }
+button.red { background-color: red; }
+button.gray { background-color: rgb(95, 95, 95);}
 
 /*       Vote     */
 .vote {
   position: absolute;
-  width: 100vw;
-  height: min-content;
-  bottom: 50px;
+  width: var(--width);
+  bottom: 54px;
+  height: 500px;
   left: 0;
-  overflow-x: scroll;
+  pointer-events: none;
+}
+.vote-loading {
+  border-radius: 10px 10px 0 0;
+  width: 40%;
 }
 
 .vote .places-container {
-  position: relative;
   display: flex;
-  width: max-content;
+  align-items: flex-end;
+  gap: 5px;
+  width: 90%;
   height: inherit;
-  padding: 0 15px;
-  align-items: end;
+  padding: 0 5%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  pointer-events: auto;
 }
 .rank-btn {
   background-color: transparent;
@@ -324,15 +378,17 @@
   background-color: rgba(40,44,52, 0.97);
   color: azure;
   position: relative;
-  width: 90vw;
-  height: 20vh;
-  margin: 0 5px;
-  overflow-y: hidden;
-  border-radius: 10px 10px 0 0;
-  transition-duration: 0.5s;
+  min-width: 100%;
+  height: 185px;
+  border-radius: 10px;
+  scroll-snap-align: center;
+  pointer-events: auto;
 }
 .place-item.full {
-  height: 50vh;
+  height: 480px;
+}
+.place-item img {
+  border-radius: 10px;
 }
 .place-num {
   margin: 0;
@@ -341,27 +397,98 @@
   left: 10px;
 }
 .place-container {
-  margin: 0 5%;
+  position: relative;
+  padding: 0 5%;
+  height: 93%;
   text-align: left;
+}
+.place-container.scrollable::-webkit-scrollbar { display: none;}
+
+.header-img {
+  position: absolute;
+  top: 5px;
+  right: 2%;
+}
+img.header-img {
+  width: 38%;
+  max-height: 100px;
 }
 .place-header h2 {
   margin:0;
-  font-size: 25px;
+  display: block;
+  width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 20px;
 }
+.rating { 
+  position: relative;
+  display: flex; 
+}
+.stars-outer {
+  position: relative;
+}
+.stars-inner {
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.star { width: 15px; }
 .place-details {
   margin: 5px 0 0;
 }
 .place-details p {
   color: gray;
   margin: 0 2px;
+  font-size: 15px;
 }
-.row { display: flex; }
+.row { display: flex; align-items: baseline; }
+.row.links { justify-content: space-evenly; }
+.row.links a {
+  background-color: rgb(40,44,52);
+  color: azure;
+  padding: 5px 20px;
+  border-radius: 10px;
+  font-size: 18px;
+}
+.place-section p {
+  margin: 5px 2px;
+  color: azure;
+}
+.place-section-header {
+  border-bottom: 2px solid azure;
+}
+.place-section-header h4 {margin: 0;}
+
+.image-gallery {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+  width: 100%;
+  height: max-content;
+  overflow-x: scroll;
+}
+.image-gallery img {
+  height: min-content;
+}
 p.green { color: green}
 p.red { color: red}
+p.dot, span.dot {
+  font-size: 18px;
+  position: relative;
+  top: -5px;
+}
+p:last-child span {
+  display: none;
+}
 
 /*       Vote Ranking     */
 .ranking-container {
   height: 83%;
+  width: 99%;
   position: relative;
 }
 .rank-item {
@@ -397,5 +524,31 @@ p.red { color: red}
 
 /*       Show Results     */
 .results-container {
-  height: 85%;
+  height: 80%;
+  width:99%;
+}
+.results-container h2, .results-container p {
+  margin: 0px 2px;
+}
+
+
+@media only screen and (min-width: 600px) {
+  .App {
+    margin-left: calc((100vw - var(--width)) / 2);
+  }
+  .item-area {
+    left: calc((100vw - var(--width)) / 2);
+  }
+  .util-bar {
+    left: calc((100vw - var(--width)) / 2);
+  }
+  .popup {
+    left: calc((100vw - var(--width)) / 2 + var(--width)/20);
+  }
+  .vote {
+    left: calc((100vw - var(--width)) / 2);
+  }
+  .rank-btn {
+    left: calc((100vw - var(--width)) / 5);
+  }
 }
