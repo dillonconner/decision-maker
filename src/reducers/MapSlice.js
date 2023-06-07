@@ -5,20 +5,46 @@ import { baseUrl } from '../util/apiConfig';
 export const searchNearby = createAsyncThunk(
     'map/searchNearby',
     async (request) => {
-        console.log('search nearby');
         const resp = await fetch(`${baseUrl}/google/nearbysearch`,{
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(request)
         }).then(response => response.json());
-
-        console.log(resp);
         return resp
     }
 );
+export const loadPlaceDetails = createAsyncThunk(
+    'map/loadPlaceDetails',
+    async (places) => {
+        const placesArr = [];
+        for(const place of places){
+            const resp = await fetch(`${baseUrl}/google/placedetails`,{
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({place_id:place.place_id})
+            }).then(response => response.json());
+            placesArr.push(resp);
+        }
+        //console.log(placesArr);
+        return placesArr
+    }
+)
+export const loadResultDetails = createAsyncThunk(
+    'map/loadResultDetails',
+    async ({place_id}) => {
+        const resp = await fetch(`${baseUrl}/google/placedetails`,{
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({place_id:place_id})
+        }).then(response => response.json());
+        return resp
+    }
+)
 
 const initialState = {
     places: [],
+    placesDetails: [],
+    resultDetails: null,
     center: null,
     bounds: null,
     radius: null,
@@ -48,28 +74,52 @@ const mapSlice = createSlice({
     },
     extraReducers: {
         [searchNearby.pending]: (state, action) => {
-            //console.log('pending');
             state.isLoading = true;
             state.requestFailed = false;
         },
         [searchNearby.fulfilled]: (state, action) => {
-            //console.log('fulfilled');
             console.log(action.payload);
             state.isLoading = false;
             state.requestFailed = false;
             state.places = action.payload;
         },
         [searchNearby.rejected]: (state, action) => {
-            //console.log('rejected');
+            state.isLoading = false;
+            state.requestFailed = true;
+        },
+        [loadPlaceDetails.pending]: (state, action) => {
+            state.isLoading = true;
+            state.requestFailed = false;
+        },
+        [loadPlaceDetails.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.requestFailed = false;
+            state.placesDetails = action.payload;
+        },
+        [loadPlaceDetails.rejected]: (state, action) => {
+            state.isLoading = false;
+            state.requestFailed = true;
+        },
+        [loadResultDetails.pending]: (state, action) => {
+            state.isLoading = true;
+            state.requestFailed = false;
+        },
+        [loadResultDetails.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.requestFailed = false;
+            state.resultDetails = action.payload;
+        },
+        [loadResultDetails.rejected]: (state, action) => {
             state.isLoading = false;
             state.requestFailed = true;
         },
     }
 });
-
+export const selectPlaces = state => state.map.places;
+export const selectPlaceDetails = state => state.map.placesDetails;
+export const selectResultDetails = state => state.map.resultDetails;
 export const selectCenter = state => state.map.center;
 export const selectBounds = state => state.map.bounds;
-export const selectPlaces = state => state.map.places;
 export const selectRadius = state => state.map.radius;
 export const selectIsLoading = state => state.map.isLoading;
 
