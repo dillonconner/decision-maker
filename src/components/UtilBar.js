@@ -18,13 +18,17 @@ const UtilBar = () => {
         setShowProfilePopup(!showProfilePopup);
         setShowFriendsPopup(false);
     }
+    const closePopups = () => {
+        setShowProfilePopup(false);
+        setShowFriendsPopup(false);
+    }
 
     return (
         <div className="util-bar">
             <button className="util-btn" onClick={handleProfileToggle}>Profile</button>
             <button className="util-btn" onClick={handleFriendsToggle}>Friends</button>
-            {showFriendsPopup && auth.user && <Friends /> }
-            {showProfilePopup && auth.user && <Profile /> }
+            {showFriendsPopup && auth.user && <Friends close={closePopups}/> }
+            {showProfilePopup && auth.user && <Profile close={closePopups}/> }
         </div>
     )
 }
