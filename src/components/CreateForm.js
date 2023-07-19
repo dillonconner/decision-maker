@@ -81,7 +81,7 @@ const CreateForm = () => {
         const request = {
             ...currRequest,
             recipients: currRequest.recipients.map(r => {return {...r, voted:false}}),
-            placeVotes: places.map(p => {return {place: p, votes: 0}}),
+            placeVotes: places.map(p => {return {place: {place_id: p.place_id, geometry: p.geometry}, votes: 0}}),
             center: center,
             round: 1,
         }

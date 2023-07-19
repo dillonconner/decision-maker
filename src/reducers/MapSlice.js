@@ -21,7 +21,7 @@ export const loadPlaceDetails = createAsyncThunk(
             const resp = await fetch(`${baseUrl}/google/placedetails`,{
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({place_id:place.place_id})
+                body: JSON.stringify({place_id: place.place_id})
             }).then(response => response.json());
             placesArr.push(resp);
         }
@@ -78,7 +78,6 @@ const mapSlice = createSlice({
             state.requestFailed = false;
         },
         [searchNearby.fulfilled]: (state, action) => {
-            console.log(action.payload);
             state.isLoading = false;
             state.requestFailed = false;
             state.places = action.payload;

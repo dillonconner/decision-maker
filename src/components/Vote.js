@@ -31,7 +31,6 @@ const Vote = () => {
             const places = full.placeVotes.map(pv => pv.place);
             dispatch(updatePlaces(places));
             dispatch(loadPlaceDetails(places));
-            console.log(full);
         }
     }, [full]);
 

@@ -248,6 +248,7 @@
 
 
 /*       login    */
+
 .login form {
   font-size: 12px;
   width:70%;
@@ -276,6 +277,7 @@
 }
 .login-submit {
   width:70%;
+  margin: 10px 15% 0;
   font-size: 20px;
 }
 
@@ -357,7 +359,7 @@ button.gray { background-color: rgb(95, 95, 95);}
   overflow-x: scroll;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
-  pointer-events: auto;
+  pointer-events: none;
 }
 .rank-btn {
   background-color: transparent;
@@ -370,7 +372,8 @@ button.gray { background-color: rgb(95, 95, 95);}
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: 3;
+  z-index: 4;
+  pointer-events: all;
 }
 
 /*       Place Item     */
@@ -387,6 +390,9 @@ button.gray { background-color: rgb(95, 95, 95);}
 .place-item.full {
   height: 480px;
 }
+.place-item.result {
+  height: max-content;
+}
 .place-item img {
   border-radius: 10px;
 }
@@ -401,6 +407,9 @@ button.gray { background-color: rgb(95, 95, 95);}
   padding: 0 5%;
   height: 93%;
   text-align: left;
+}
+.place-container.result {
+  height: max-content;
 }
 .place-container.scrollable::-webkit-scrollbar { display: none;}
 
@@ -437,6 +446,7 @@ img.header-img {
 }
 .star { width: 15px; }
 .place-details {
+  position: relative;
   margin: 5px 0 0;
 }
 .place-details p {
@@ -445,7 +455,12 @@ img.header-img {
   font-size: 15px;
 }
 .row { display: flex; align-items: baseline; }
-.row.links { justify-content: space-evenly; }
+.row.links { 
+  position: relative;
+  top:0px;
+  width: 100%;
+  justify-content: space-evenly; 
+}
 .row.links a {
   background-color: rgb(40,44,52);
   color: azure;
@@ -453,6 +468,12 @@ img.header-img {
   border-radius: 10px;
   font-size: 18px;
 }
+.place-extra {
+  position: relative;
+  top: 0px;
+  width: 100%;
+}
+
 .place-section p {
   margin: 5px 2px;
   color: azure;
@@ -462,17 +483,19 @@ img.header-img {
 }
 .place-section-header h4 {margin: 0;}
 
+
 .image-gallery {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-top: 5px;
   width: 100%;
-  height: max-content;
+  height: min-content;
   overflow-x: scroll;
 }
 .image-gallery img {
-  height: min-content;
+  width: auto;
+  height: auto;
 }
 p.green { color: green}
 p.red { color: red}

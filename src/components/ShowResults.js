@@ -30,14 +30,11 @@ const ShowResults = ({result, hideResults}) => {
             <div className="results-container scrollable">
                 <h2>{result.subject}</h2>
                 <p>{new Date(result.time).toLocaleString()}</p>
-                
-                <div className="item-section" style={{height: '49%', overflow: 'hidden'}}>
-                        <div className="item-section-header">
-                            <h3>Winner</h3>
-                        </div>
-                        <div className="places-container">
-                            {resultDetails && <PlaceItem place={resultDetails} full/>}
-                        </div>
+                <div className="item-section">
+                    <div className="item-section-header">
+                        <h3>Winner</h3>
+                    </div>
+                    {resultDetails && <PlaceItem place={resultDetails} full result/>}
                 </div>
                 <div className="item-section">
                     <div className="item-section-header">
